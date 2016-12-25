@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+    nginx:
+        build: "docker/nginx"
+        ports:
+            - 80:80
+        links:
+            - php7-fpm:php7-fpm
+            - php56-fpm:php56-fpm
+    php56-fpm:
+        build: "docker/php56-fpm"
+        links:
+            - memcached:memcached
+        volumes:
+            - "./app:/var/www/app"
+    php7-fpm:
+        build: "docker/php7-fpm"
+        links:
+            - memcached:memcached
+        volumes:
+            - "./app:/var/www/app"
+
+    php-apache:
+        build: "docker/php-apache"
+        ports:
+            - 8080:80
+        links:
+            - memcached:memcached
+        volumes:
+            - "./app:/var/www/html"
+
+    memcached:
+        image: "memcached"
